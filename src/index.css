@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --bg-base: #ece4cf;
+    --bg-soft: #e8dfc9;
+    --bg-moss: #e6deca;
+    --bg-warm: #f1e8d4;
+    --brand-primary: #2f4b3a;
+    --brand-deep: #21362a;
+    --brand-secondary: #718368;
+    --brand-accent: #a9774e;
+    --brand-water: #7e999a;
+    --text-primary: #213128;
+    --text-secondary: #56645c;
+    --text-tertiary: #73837a;
+    --bg-surface: #fbf7ef;
+    --border-light: rgba(47, 79, 58, 0.1);
+    --brand-hover: #264030;
+    --shadow-soft: 0 10px 26px rgba(33, 49, 40, 0.07);
+    --shadow-card: 0 14px 36px rgba(33, 49, 40, 0.1);
+    --shadow-hover: 0 18px 46px rgba(33, 49, 40, 0.14);
+    --section-gap: clamp(4rem, 8vw, 7rem);
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    @apply bg-[var(--bg-base)] text-[var(--text-primary)] antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  a,
+  button {
+    @apply transition-all duration-200 ease-out;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .card {
+    @apply rounded-[24px] border border-[rgba(47,79,58,0.08)] bg-[#FBF7EF] shadow-[var(--shadow-soft)];
+  }
+
+  .card-strong {
+    @apply rounded-[32px] border border-[rgba(47,79,58,0.1)] bg-[rgba(255,251,245,0.92)] shadow-[var(--shadow-card)];
+  }
+
+  .card-hover {
+    @apply hover:-translate-y-1 hover:shadow-[var(--shadow-hover)];
+  }
+
+  .glass-panel {
+    background: rgba(255, 251, 245, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(47, 79, 58, 0.08);
+    box-shadow: var(--shadow-soft);
+    @apply rounded-[999px];
+  }
+
+  .btn-primary {
+    @apply inline-flex min-h-11 cursor-pointer items-center justify-center rounded-[999px] bg-[var(--brand-primary)] px-6 py-3 text-sm font-medium text-[#f8f2e8] hover:-translate-y-0.5 hover:bg-[var(--brand-deep)] hover:shadow-[var(--shadow-soft)];
+  }
+
+  .btn-secondary {
+    @apply inline-flex min-h-11 cursor-pointer items-center justify-center rounded-[999px] border border-[rgba(47,79,58,0.14)] bg-[#f9f4ea] px-6 py-3 text-sm font-medium text-[var(--brand-primary)] hover:-translate-y-0.5 hover:bg-[#fffaf1];
+  }
+
+  .field-input {
+    @apply mt-2 h-[52px] w-full rounded-[16px] border border-[rgba(47,79,58,0.12)] bg-[#fffaf2] px-4 text-[15px] text-[var(--text-primary)] outline-none focus:border-[var(--brand-primary)];
+  }
+
+  .field-textarea {
+    @apply mt-2 min-h-[120px] w-full rounded-[16px] border border-[rgba(47,79,58,0.12)] bg-[#fffaf2] px-4 py-3 text-[15px] text-[var(--text-primary)] outline-none focus:border-[var(--brand-primary)];
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-[999px] bg-[var(--bg-moss)] px-3 py-1 text-xs font-medium text-[var(--brand-primary)];
+  }
+
+  .section-shell {
+    @apply py-14 md:py-20;
+  }
+
+  .section-title {
+    @apply text-[clamp(1.9rem,3.1vw,3rem)] font-semibold leading-[1.15] tracking-[-0.015em] text-[var(--text-primary)];
+  }
+
+  .section-subtle {
+    @apply text-sm text-[var(--text-secondary)];
+  }
+
+  .entry-card {
+    @apply relative overflow-hidden rounded-[24px] border border-[rgba(47,79,58,0.1)] p-6 shadow-[var(--shadow-soft)] transition-all duration-300;
+  }
+
+  .entry-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 85% -5%, rgba(255, 255, 255, 0.5), transparent 45%);
+    pointer-events: none;
+  }
+
+  .trust-card {
+    @apply rounded-[24px] border border-[rgba(47,79,58,0.08)] bg-[rgba(255,251,245,0.84)] p-6 shadow-[var(--shadow-soft)];
+  }
+
+  .journal-card {
+    @apply rounded-[20px] border border-[rgba(47,79,58,0.08)] bg-[rgba(255,251,245,0.84)] p-4 shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-hover)];
+  }
+
+  /* 山海云登录 / 注册 / 账户（与 PRD 演示页一致） */
+  .tm-page {
+    @apply container-page pb-16 pt-28;
+  }
+
+  .tm-page-narrow {
+    @apply mx-auto max-w-lg;
+  }
+
+  .tm-page-title {
+    @apply section-title;
+  }
+
+  .tm-page-lead {
+    @apply section-subtle mt-3;
+  }
+
+  .tm-page-footer-note {
+    @apply mt-8 text-sm text-[var(--text-secondary)];
+  }
+
+  .tm-page-footer-note a {
+    @apply font-medium text-[var(--brand-primary)] underline-offset-2 hover:underline;
+  }
+
+  .tm-form {
+    @apply mt-8 grid gap-5;
+  }
+
+  .tm-form-error {
+    @apply rounded-[12px] border border-red-200/80 bg-red-50/90 px-3 py-2 text-sm text-red-800;
+  }
+
+  /* 注册成功、待邮箱验证（与 tm-input / fieldset 同系暖白底） */
+  .tm-register-notice {
+    @apply rounded-[16px] border border-[rgba(47,79,58,0.12)] bg-[#fffaf2] p-5 shadow-[var(--shadow-soft)];
+  }
+
+  .tm-register-notice-title {
+    @apply font-serif text-lg font-semibold text-[var(--brand-deep)];
+  }
+
+  .tm-register-notice-highlight {
+    @apply mt-3 inline-block rounded-lg bg-[rgba(47,79,58,0.1)] px-2.5 py-1 text-sm font-medium text-[var(--brand-deep)];
+  }
+
+  .tm-register-notice-body {
+    @apply mt-3 text-sm leading-relaxed text-[var(--text-secondary)];
+  }
+
+  .tm-field-hint {
+    @apply text-xs text-red-800;
+  }
+
+  .tm-field {
+    @apply grid gap-1;
+  }
+
+  .tm-field-label {
+    @apply text-sm font-medium text-[var(--text-secondary)];
+  }
+
+  .tm-input {
+    @apply h-[52px] w-full rounded-[16px] border border-[rgba(47,79,58,0.12)] bg-[#fffaf2] px-4 text-[15px] text-[var(--text-primary)] outline-none focus:border-[var(--brand-primary)];
+  }
+
+  .tm-fieldset {
+    @apply grid gap-2 rounded-[16px] border border-[rgba(47,79,58,0.12)] bg-[#fffaf2]/80 p-4;
+  }
+
+  .tm-radio {
+    @apply flex cursor-pointer items-center gap-2 text-sm text-[var(--text-primary)];
+  }
+
+  .tm-btn {
+    @apply inline-flex min-h-11 cursor-pointer items-center justify-center rounded-[999px] px-6 py-3 text-sm font-medium transition-all duration-200;
+  }
+
+  .tm-btn-primary {
+    @apply bg-[var(--brand-primary)] text-[#f8f2e8] hover:-translate-y-0.5 hover:bg-[var(--brand-deep)] hover:shadow-[var(--shadow-soft)];
+  }
+
+  .tm-btn-secondary {
+    @apply border border-[rgba(47,79,58,0.14)] bg-[#f9f4ea] text-[var(--brand-primary)] hover:-translate-y-0.5 hover:bg-[#fffaf1];
+  }
+
+  .tm-account-card {
+    @apply card mt-8 p-6;
+  }
+
+  .tm-account-dl {
+    @apply grid grid-cols-[minmax(6rem,auto)_1fr] gap-x-4 gap-y-3 text-sm;
+  }
+
+  .tm-account-dl dt {
+    @apply font-medium text-[var(--text-secondary)];
+  }
+
+  .tm-account-dl dd {
+    @apply text-[var(--text-primary)];
+  }
+
+  .tm-account-actions {
+    @apply mt-8 flex flex-wrap gap-3 border-t border-[rgba(47,79,58,0.08)] pt-6;
+  }
+}
