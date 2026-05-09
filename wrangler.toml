@@ -1,0 +1,13 @@
+# Cloudflare Workers 静态资源。须与 package.json 同目录，且已提交到 Git（否则 CI 会走 Vite 自动脚手架并生成缺 directory 的配置）。
+# 文档：https://developers.cloudflare.com/workers/framework-guides/automatic-configuration/#skipping-automatic-configuration
+
+name = "terramar"
+compatibility_date = "2025-05-09"
+compatibility_flags = [ "nodejs_compat" ]
+
+[observability]
+enabled = true
+
+[assets]
+directory = "dist"
+not_found_handling = "single-page-application"

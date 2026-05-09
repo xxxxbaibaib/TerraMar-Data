@@ -1,4 +1,10 @@
-# React + TypeScript + Vite
+# TerraMar 官网（React + TypeScript + Vite）
+
+上线架构与操作清单见 **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**（腾讯云前端托管 + Supabase；含域名、环境变量与验收步骤）。
+
+---
+
+以下为 Vite 模板自带说明。
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
