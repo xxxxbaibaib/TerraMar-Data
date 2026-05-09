@@ -1,6 +1,6 @@
 # TerraMar 官网上线流程（腾讯云前端 + Supabase）
 
-本文对应「GitHub / Vercel / Cloudflare / Supabase」分工：**GitHub 存代码**；**前端**可选用腾讯云、Cloudflare Pages、Vercel 等其一；**Supabase** 提供数据库、鉴权与 Edge Functions。仓库根目录须包含 **`wrangler.toml`**（与 `package.json` 同级、**必须提交到 Git**）：`[assets]` 含 **`directory = "dist"`** 与 **`not_found_handling`**。若 CI 里仍出现「Detected Project Settings / Create wrangler.jsonc」且 `assets` 无 `directory`，说明 **Cloudflare 构建目录下没有读到该文件**（未推送、分支不对，或 **Root directory** 未指向含 `wrangler.toml` 的子目录）。另见 [`public/_redirects`](../public/_redirects)。  
+本文对应「GitHub / Vercel / Cloudflare / Supabase」分工：**GitHub 存代码**；**前端**可选用腾讯云、Cloudflare Pages、Vercel 等其一；**Supabase** 提供数据库、鉴权与 Edge Functions。仓库根目录须包含 **`wrangler.toml`**（与 `package.json` 同级、**必须提交到 Git**）：`[assets]` 含 **`directory = "dist"`** 与 **`not_found_handling = "single-page-application"`**。若 CI 里仍出现「Detected Project Settings / Create wrangler.jsonc」且 `assets` 无 `directory`，说明 **Cloudflare 构建目录下没有读到该文件**（未推送、分支不对，或 **Root directory** 未指向含 `wrangler.toml` 的子目录）；**不要**再在 `public/_redirects` 使用 `/* /index.html 200`，否则会与 `not_found_handling` 叠加导致 Cloudflare 报「Infinite loop」部署失败。
 
 **推荐 Deploy 命令**：`npm run deploy`（即 `wrangler deploy --config wrangler.toml`），以便使用 `npm ci` 安装到 **node_modules** 的 Wrangler，避免 `npx` 另装一份再跑自动脚手架。若坚持用 `npx wrangler deploy`，须保证仓库里已有 **`wrangler.toml`** 且 **`package-lock.json` 含 wrangler**（`npm ci` 后 `node_modules/.bin/wrangler` 存在）。
 
@@ -38,7 +38,7 @@ flowchart LR
 3. **依赖**：`package.json` 含 **`wrangler`** `devDependency`；**务必推送 `package-lock.json`**，否则 `npm ci` 不会安装 Wrangler，`npx wrangler` 会临时下载并可能再次触发不完整的自动配置输出。  
 4. **Pages 控制台**（若用 Git 集成而非仅 Wrangler）：**Build output directory** 填 `dist`；**Root directory** 若仓库为 monorepo 则指向含 `package.json` 的子目录（如 `terramar-website`）。  
 5. **环境变量**：在 Cloudflare 项目设置中配置与腾讯云相同的 `VITE_SUPABASE_URL`、`VITE_SUPABASE_ANON_KEY`（构建时注入）。  
-6. **SPA 路由**：已提供 [`public/_redirects`](../public/_redirects)，构建后会复制到 `dist`，避免刷新子路径 404。
+6. **SPA 路由**：依赖 `wrangler.toml` 中 **`not_found_handling = "single-page-application"`**，勿在 `dist` 中再保留与上述冲突的 **`_redirects`** 规则。
 
 ## 2. Supabase：生产环境与支付（待办：supabase-prod）
 
