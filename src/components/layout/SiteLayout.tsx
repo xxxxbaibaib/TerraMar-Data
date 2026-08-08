@@ -30,7 +30,7 @@ export function SiteLayout() {
             onClick={() => trackEvent('click_logo', { sourcePath: 'header' })}
             className="flex items-center gap-3 text-base font-semibold text-white md:text-lg"
           >
-            <img src="/logo-brand.png" alt="TerraMar Logo" className="h-10 w-10 rounded-full object-cover" />
+            <img src="/logo-brand.png" alt="TerraMar Logo" className="h-10 w-10 rounded-full bg-white object-contain" />
             <span className="flex flex-col leading-tight">
               <span>山海自然科考</span>
               <span className="text-[0.92em] italic text-white/90">TerraMar Expeditions</span>
@@ -115,7 +115,7 @@ export function SiteLayout() {
           <div className="container-page mt-2 md:hidden">
             <div className="rounded-[24px] border border-white/30 bg-[rgba(20,30,24,0.62)] p-3 backdrop-blur-md">
               <div className="mb-2 flex items-center gap-2 border-b border-[rgba(47,79,58,0.12)] pb-2">
-                <img src="/logo-brand.png" alt="TerraMar Logo" className="h-8 w-8 rounded-full object-cover" />
+                <img src="/logo-brand.png" alt="TerraMar Logo" className="h-8 w-8 rounded-full bg-white object-contain" />
                 <p className="text-sm font-medium text-white">TerraMar Expeditions</p>
               </div>
               <div className="flex flex-col gap-2">
@@ -194,7 +194,7 @@ export function SiteLayout() {
       <footer className="mt-20 border-t border-[rgba(47,79,58,0.2)] bg-[#1F3328] text-[#EDE8DC]">
         <div className="container-page py-12 text-sm text-slate-600">
           <div className="flex items-center gap-2 text-[#F7F4EC]">
-            <img src="/logo-brand.png" alt="TerraMar Logo" className="h-9 w-9 rounded-full object-cover" />
+            <img src="/logo-brand.png" alt="TerraMar Logo" className="h-9 w-9 rounded-full bg-white object-contain" />
             <p className="font-medium">TerraMar Expeditions 山海自然科考</p>
           </div>
           <p className="mt-2 text-[#DDD5C5]">让保护被看见，让自然可感知，让参与有意义。</p>
