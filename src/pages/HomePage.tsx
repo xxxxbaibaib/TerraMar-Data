@@ -98,7 +98,6 @@ export function HomePage() {
                   了解我们的使命
                 </Link>
               </div>
-              <p className="mt-5 text-xs text-[#F8F7F2]/85 md:text-sm">依托保护地真实场景的自然教育机构 ｜ 保护地 · 社区 · 公益 · 公民科学</p>
             </div>
         </div>
       </section>
