@@ -2,9 +2,14 @@ import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { buildAuthHref, shanhaiJoinPath } from '../lib/joinRouting'
 import { trackEvent } from '../lib/analytics'
-import { HERO_HOME_POSTER, HERO_HOME_VIDEO_SRC } from '../config/heroMedia'
-import { programs } from '../mock/programs'
-import { resources } from '../mock/resources'
+import { HERO_HOME_POSTER } from '../config/heroMedia'
+import { useHomeHeroVideoSrc } from '../lib/cms/useHeroVideoSrc'
+import { fetchPublishedHomeBlocks } from '../lib/cms/siteContent'
+import { fetchPublishedPrograms } from '../lib/cms/programsRemote'
+import { fetchPublishedResources } from '../lib/cms/resourcesRemote'
+import { DEFAULT_HOME_BLOCKS, type HomePageBlocks } from '../lib/cms/types'
+import type { Program } from '../mock/types'
+import type { ResourceArticle } from '../mock/types'
 import { useAuth } from '../lib/auth/AuthContext'
 import { isMockAuthMode } from '../lib/supabase/env'
 import {
@@ -16,12 +21,21 @@ export function HomePage() {
   const { isAuthenticated, user } = useAuth()
   const mockMode = isMockAuthMode()
   const recentSliderRef = useRef<HTMLDivElement | null>(null)
-  const featuredResources = resources.slice(0, 3)
+  const heroVideoSrc = useHomeHeroVideoSrc()
+  const [hero, setHero] = useState<HomePageBlocks>(DEFAULT_HOME_BLOCKS)
+  const [programs, setPrograms] = useState<Program[]>([])
+  const [featuredResources, setFeaturedResources] = useState<ResourceArticle[]>([])
   const [shanhaiPrecheck, setShanhaiPrecheck] = useState<'idle' | 'loading' | 'ready'>('idle')
   const [personalJoinedShanhai, setPersonalJoinedShanhai] = useState(false)
 
   useEffect(() => {
     trackEvent('view_home')
+  }, [])
+
+  useEffect(() => {
+    void fetchPublishedHomeBlocks().then(setHero)
+    void fetchPublishedPrograms().then(setPrograms)
+    void fetchPublishedResources().then((list) => setFeaturedResources(list.slice(0, 3)))
   }, [])
 
   useEffect(() => {
@@ -67,35 +81,35 @@ export function HomePage() {
             preload="auto"
             {...(HERO_HOME_POSTER ? { poster: HERO_HOME_POSTER } : {})}
             onError={() => {
-              console.warn('[TerraMar] 首页背景视频加载失败，请检查 Storage 桶是否 Public、文件名是否与 bucket 内一致。当前地址:', HERO_HOME_VIDEO_SRC)
+              console.warn('[TerraMar] 首页背景视频加载失败，请检查 Storage 桶是否 Public、文件名是否与 bucket 内一致。当前地址:', heroVideoSrc)
             }}
           >
-            <source src={HERO_HOME_VIDEO_SRC} type="video/mp4" />
+            <source src={heroVideoSrc} type="video/mp4" />
           </video>
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(22,36,29,0.28)] via-[rgba(22,36,29,0.42)] to-[rgba(22,36,29,0.62)]" />
         <div className="relative z-10 flex min-h-screen items-center justify-center px-6 pt-24">
             <div className="max-w-4xl text-center text-[#F8F7F2]">
               <p className="mx-auto mb-4 inline-flex rounded-[999px] border border-white/40 bg-white/15 px-4 py-1 text-base backdrop-blur">
-                Learning with the living world
+                {hero.eyebrow}
               </p>
-              <h1 className="text-4xl font-semibold leading-tight md:text-6xl">让保护被看见，让自然可感知，让参与有意义。</h1>
+              <h1 className="text-4xl font-semibold leading-tight md:text-6xl">{hero.headline}</h1>
               <p className="mx-auto mt-5 max-w-3xl text-sm text-[#F8F7F2]/90 md:text-base">
-                清华团队成立，致力于国家公园自然教育体系研究，文化传播，社区能力建设。
+                {hero.subtitle}
               </p>
               <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
                 <Link
-                  to="/programs"
+                  to={hero.primaryCtaHref || '/programs'}
                   onClick={() => trackEvent('click_home_primary_cta', { sourcePath: '/' })}
                   className="inline-flex min-h-11 items-center justify-center rounded-[999px] bg-white/95 px-6 py-3 text-sm font-medium text-[#1F3328] hover:-translate-y-0.5 hover:bg-white"
                 >
-                  查看近期活动
+                  {hero.primaryCtaLabel}
                 </Link>
                 <Link
-                  to="/about#mission"
+                  to={hero.secondaryCtaHref || '/about#mission'}
                   className="inline-flex min-h-11 items-center justify-center rounded-[999px] border border-white/45 bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur hover:bg-white/20"
                 >
-                  了解我们的使命
+                  {hero.secondaryCtaLabel}
                 </Link>
               </div>
             </div>

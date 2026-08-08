@@ -22,6 +22,7 @@ export type ProfileRow = {
   bio?: string | null
   profile_phone?: string | null
   profile_email?: string | null
+  is_staff?: boolean | null
 }
 
 function emptyTaskProgress(): MemberTaskProgressInLevel {
@@ -66,6 +67,7 @@ export function mapProfileToCloudUser(profile: ProfileRow, authUser: User): Clou
     bio: (profile.bio ?? '').trim(),
     profilePhone: (profile.profile_phone ?? '').trim(),
     profileEmail: (profile.profile_email ?? '').trim(),
+    isStaff: Boolean(profile.is_staff),
   }
 
   const { level, levelPoints } = computeLevelFromUser(base)

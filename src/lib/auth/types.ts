@@ -48,6 +48,8 @@ export interface CloudUserRecord {
   profilePhone: string
   /** 业务联系邮箱；`profiles.profile_email` */
   profileEmail: string
+  /** 官网 CMS `/admin` 权限；`profiles.is_staff` */
+  isStaff: boolean
 }
 
 export interface CloudSessionPayload {

@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { SiteLayout } from '../components/layout/SiteLayout'
+import { AdminShell } from '../components/admin/AdminShell'
 import { AuthProvider } from '../lib/auth/AuthContext'
 import { AboutPage } from '../pages/AboutPage'
 import { AccountLayout } from '../pages/account/AccountLayout'
@@ -14,6 +15,19 @@ import { AccountSecurityPage } from '../pages/account/modules/AccountSecurityPag
 import { AccountSupportPage } from '../pages/account/modules/AccountSupportPage'
 import { AccountTasksPage } from '../pages/account/modules/AccountTasksPage'
 import { AccountWishlistPage } from '../pages/account/modules/AccountWishlistPage'
+import { AdminAuditPage } from '../pages/admin/AdminAuditPage'
+import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage'
+import { AdminGuard } from '../pages/admin/AdminGuard'
+import { AdminHeroesPage } from '../pages/admin/AdminHeroesPage'
+import { AdminLeadsPage } from '../pages/admin/AdminLeadsPage'
+import { AdminMapsPage } from '../pages/admin/AdminMapsPage'
+import { AdminMediaPage } from '../pages/admin/AdminMediaPage'
+import { AdminPagesPage } from '../pages/admin/AdminPagesPage'
+import { AdminProgramsPage } from '../pages/admin/AdminProgramsPage'
+import { AdminResourcesPage } from '../pages/admin/AdminResourcesPage'
+import { AdminReviewPage } from '../pages/admin/AdminReviewPage'
+import { AdminSettingsPage } from '../pages/admin/AdminSettingsPage'
+import { AdminTeamPage } from '../pages/admin/AdminTeamPage'
 import { CooperationJoinNetworkPage } from '../pages/CooperationJoinNetworkPage'
 import { CooperationPage } from '../pages/CooperationPage'
 import { JoinNetworkLandingPage } from '../pages/JoinNetworkLandingPage'
@@ -31,6 +45,30 @@ import { LoginPage } from '../pages/LoginPage'
 import { RegisterPage } from '../pages/RegisterPage'
 
 export const router = createBrowserRouter([
+  {
+    path: '/admin',
+    element: (
+      <AuthProvider>
+        <AdminGuard>
+          <AdminShell />
+        </AdminGuard>
+      </AuthProvider>
+    ),
+    children: [
+      { index: true, element: <AdminDashboardPage /> },
+      { path: 'settings', element: <AdminSettingsPage /> },
+      { path: 'pages', element: <AdminPagesPage /> },
+      { path: 'team', element: <AdminTeamPage /> },
+      { path: 'programs', element: <AdminProgramsPage /> },
+      { path: 'resources', element: <AdminResourcesPage /> },
+      { path: 'media', element: <AdminMediaPage /> },
+      { path: 'heroes', element: <AdminHeroesPage /> },
+      { path: 'leads', element: <AdminLeadsPage /> },
+      { path: 'maps', element: <AdminMapsPage /> },
+      { path: 'review', element: <AdminReviewPage /> },
+      { path: 'audit', element: <AdminAuditPage /> },
+    ],
+  },
   {
     path: '/',
     element: (

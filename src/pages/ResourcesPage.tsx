@@ -1,14 +1,17 @@
-import { resources } from '../mock/resources'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { trackEvent } from '../lib/analytics'
+import { fetchPublishedResources } from '../lib/cms/resourcesRemote'
+import type { ResourceArticle } from '../mock/types'
 
 export function ResourcesPage() {
+  const [resources, setResources] = useState<ResourceArticle[]>([])
   const [category, setCategory] = useState('全部')
-  const categories = useMemo(() => ['全部', ...new Set(resources.map((item) => item.category))], [])
+  const categories = useMemo(() => ['全部', ...new Set(resources.map((item) => item.category))], [resources])
 
   useEffect(() => {
     trackEvent('view_resources')
+    void fetchPublishedResources().then(setResources)
   }, [])
 
   const filtered = category === '全部' ? resources : resources.filter((item) => item.category === category)
