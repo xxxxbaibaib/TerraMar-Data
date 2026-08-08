@@ -1,4 +1,8 @@
-import { teamMembers } from '../mock/team'
+import { useEffect, useState } from 'react'
+import { fetchPublishedAboutBlocks } from '../lib/cms/siteContent'
+import { fetchPublishedTeamMembers } from '../lib/cms/teamRemote'
+import { DEFAULT_ABOUT_BLOCKS, type AboutPageBlocks } from '../lib/cms/types'
+import type { TeamMember } from '../mock/team'
 
 const values = [
   { title: '专业性', text: '以真实生态场景为基础，结合跨学科导师团队，保证课程深度与方法论。' },
@@ -8,6 +12,14 @@ const values = [
 ]
 
 export function AboutPage() {
+  const [blocks, setBlocks] = useState<AboutPageBlocks>(DEFAULT_ABOUT_BLOCKS)
+  const [team, setTeam] = useState<TeamMember[]>([])
+
+  useEffect(() => {
+    void fetchPublishedAboutBlocks().then(setBlocks)
+    void fetchPublishedTeamMembers().then(setTeam)
+  }, [])
+
   return (
     <>
       <section className="relative -mt-6 flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#1f3328] px-6 pt-24 text-white" id="mission">
@@ -18,10 +30,8 @@ export function AboutPage() {
         />
         <div className="absolute inset-0 bg-[rgba(16,25,21,0.5)]" />
         <div className="relative z-10 max-w-4xl text-center">
-          <h1 className="text-4xl font-semibold md:text-6xl">关于我们</h1>
-          <p className="mt-4 text-base text-white/90 md:text-lg">
-            TerraMar 山海自然科考致力于让更多人理解保护地、理解生命，并参与到真实的自然保护行动中。
-          </p>
+          <h1 className="text-4xl font-semibold md:text-6xl">{blocks.heroTitle}</h1>
+          <p className="mt-4 text-base text-white/90 md:text-lg">{blocks.heroSubtitle}</p>
         </div>
       </section>
 
@@ -37,10 +47,8 @@ export function AboutPage() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,30,22,0.86),rgba(13,30,22,0.55),rgba(13,30,22,0.72))]" />
         <div className="absolute inset-0 flex items-center p-6 md:p-10">
           <div className="max-w-4xl text-white">
-            <h2 className="text-[clamp(1.8rem,3vw,2.8rem)] font-semibold">品牌愿景</h2>
-            <p className="mt-3 text-sm leading-relaxed text-white/90 md:text-base">
-              我们坚信，一家真正成功的自然教育机构，其价值不应仅以营收和利润衡量，更应以它唤醒了多少人对自然的热爱、改变了多少儿童的生命轨迹、贡献了多少保护地的科研数据、带动了多少社区的发展来定义。这正是本机构存在的根本意义。
-            </p>
+            <h2 className="text-[clamp(1.8rem,3vw,2.8rem)] font-semibold">{blocks.visionTitle}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-white/90 md:text-base">{blocks.visionBody}</p>
           </div>
         </div>
       </article>
@@ -81,7 +89,7 @@ export function AboutPage() {
       <article className="mt-8 rounded-[24px] bg-[var(--brand-deep)] p-6">
         <h2 className="text-2xl font-semibold text-white">我们的团队</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {teamMembers.map((member) => (
+          {team.map((member) => (
             <div key={member.name} className="rounded-[20px] border border-[rgba(47,79,58,0.12)] bg-[#f8f8f6] p-5 text-center shadow-[var(--shadow-soft)]">
               <img src={member.image} alt={member.name} className="mx-auto h-24 w-24 rounded-full object-cover" />
               <p className="mt-4 text-xl font-semibold text-[var(--brand-primary)]">{member.name}</p>

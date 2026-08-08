@@ -21,7 +21,7 @@ import { fetchOrdersForUser } from '../lib/account/programOrdersRemote'
 import { useAuth } from '../lib/auth/AuthContext'
 import { buildAuthHref } from '../lib/joinRouting'
 import { isMockAuthMode } from '../lib/supabase/env'
-import { programs } from '../mock/programs'
+import { fetchPublishedProgramBySlug } from '../lib/cms/programsRemote'
 import type { Program } from '../mock/types'
 
 type Step = 'locate' | 'form' | 'success'
@@ -153,7 +153,14 @@ export function ProgramEnrollmentPage() {
   /** 报名表已成功写入后，禁止快照预检 effect 再次把 step 打回「待确认」 */
   const enrollmentSubmittedRef = useRef(false)
 
-  const program = useMemo(() => programs.find((p) => p.slug === slug), [slug])
+  const [program, setProgram] = useState<Program | null | undefined>(undefined)
+  useEffect(() => {
+    if (!slug) {
+      setProgram(null)
+      return
+    }
+    void fetchPublishedProgramBySlug(slug).then(setProgram)
+  }, [slug])
   const nextPath = `/programs/${slug ?? ''}/enrollment?orderId=${encodeURIComponent(orderId)}`
 
   const [step, setStep] = useState<Step>('locate')
@@ -283,6 +290,9 @@ export function ProgramEnrollmentPage() {
     }
   }, [orderValid, user, hydrate, orderId, slug])
 
+  if (program === undefined) {
+    return <div className="container-page py-24 text-sm text-[var(--text-secondary)]">加载中…</div>
+  }
   if (!slug || !program) {
     return <Navigate to="/programs" replace />
   }

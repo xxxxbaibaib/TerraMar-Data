@@ -6,20 +6,25 @@ import { upsertMemberEngagement } from '../lib/account/memberEngagementsRemote'
 import { buildAuthHref } from '../lib/joinRouting'
 import { createProgramOrderAsync } from '../lib/account/programOrdersStore'
 import { isMockAuthMode } from '../lib/supabase/env'
-import { programs } from '../mock/programs'
+import { fetchPublishedProgramBySlug } from '../lib/cms/programsRemote'
+import type { Program } from '../mock/types'
 
 export function ProgramDetailPage() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { isAuthenticated, user, recordCourseCompleted } = useAuth()
   const [purchaseError, setPurchaseError] = useState<string | null>(null)
-  const program = programs.find((item) => item.slug === slug)
+  const [program, setProgram] = useState<Program | null | undefined>(undefined)
 
   useEffect(() => {
     if (!slug) return
     trackEvent('view_program_detail', { slug })
+    void fetchPublishedProgramBySlug(slug).then(setProgram)
   }, [slug])
 
+  if (program === undefined) {
+    return <div className="container-page py-24 text-sm text-[var(--text-secondary)]">加载中…</div>
+  }
   if (!program) return <Navigate to="/programs" replace />
 
   return (

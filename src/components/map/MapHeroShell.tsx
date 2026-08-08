@@ -22,7 +22,7 @@ import { MapDetailDrawer } from './MapDetailDrawer'
 import { MapFilterBar } from './MapFilterBar'
 import { MapInsightPanel } from './MapInsightPanel'
 import { MapLayerSwitcher } from './MapLayerSwitcher'
-import { heroMapVideoByPage } from '../../config/heroMedia'
+import { useMapHeroVideoSrc } from '../../lib/cms/useHeroVideoSrc'
 import { MapUploadEntry } from './MapUploadEntry'
 
 interface MapHeroShellProps {
@@ -221,6 +221,7 @@ function trackJoinNetworkFromMap(page: MapPageType, slot: 'primary' | 'secondary
 }
 
 export function MapHeroShell({ page, title, subtitle, cta, ctaOnClick, secondaryCta }: MapHeroShellProps) {
+  const heroVideoSrc = useMapHeroVideoSrc(page)
   const { nodes: baseMapNodes } = useMapLocationsBaseNodes(page)
   const { nodes: welfareEnrollmentMapNodes, fromEnrollments: impactNodesFromWelfareEnrollments } =
     useWelfareEnrollmentMapNodes(page)
@@ -408,11 +409,11 @@ export function MapHeroShell({ page, title, subtitle, cta, ctaOnClick, secondary
             '[TerraMar] 地图页首屏视频加载失败，请检查 Storage 桶 Public 与策略。page=',
             page,
             'url=',
-            heroMapVideoByPage[page],
+            heroVideoSrc,
           )
         }}
       >
-        <source src={heroMapVideoByPage[page]} type="video/mp4" />
+        <source src={heroVideoSrc} type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-[rgba(14,22,18,0.4)]" />
 

@@ -13,7 +13,8 @@ import {
   setResourceTextProgress,
   setResourceVideoProgress,
 } from '../lib/resources/resourceProgressStore'
-import { resources } from '../mock/resources'
+import { fetchPublishedResourceBySlug } from '../lib/cms/resourcesRemote'
+import type { ResourceArticle } from '../mock/types'
 import { trackEvent } from '../lib/analytics'
 
 const SAVE_MS = 220
@@ -23,7 +24,7 @@ export function ResourceArticlePage() {
   const { slug } = useParams()
   const { user, isAuthenticated, refreshUser } = useAuth()
   const mockMode = isMockAuthMode()
-  const article = slug ? resources.find((r) => r.slug === slug) : undefined
+  const [article, setArticle] = useState<ResourceArticle | null | undefined>(undefined)
   const scrollRef = useRef<HTMLDivElement>(null)
   const textSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const videoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -83,8 +84,13 @@ export function ResourceArticlePage() {
   }, [slug, userId, article, hasVideo, mockMode, scheduleRemoteProgressSync])
 
   useEffect(() => {
-    if (!slug) return
+    if (!slug) {
+      setArticle(null)
+      return
+    }
     trackEvent('view_resource_article', { slug })
+    setArticle(undefined)
+    void fetchPublishedResourceBySlug(slug).then(setArticle)
   }, [slug])
 
   useEffect(() => {
@@ -182,6 +188,9 @@ export function ResourceArticlePage() {
     }
   }, [article, userId, slug, updateTextProgressFromPageScroll])
 
+  if (article === undefined) {
+    return <div className="container-page py-24 text-sm text-[var(--text-secondary)]">加载中…</div>
+  }
   if (!article) return <Navigate to="/resources" replace />
 
   const paragraphs = article.paragraphs?.length ? article.paragraphs : [article.summary]

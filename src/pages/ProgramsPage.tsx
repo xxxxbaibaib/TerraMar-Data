@@ -2,16 +2,19 @@ import { useEffect, useMemo, useState } from 'react'
 import { ProgramCard } from '../components/common/ProgramCard'
 import { MapHeroShell } from '../components/map/MapHeroShell'
 import { trackEvent } from '../lib/analytics'
-import { programs } from '../mock/programs'
-import type { ProgramIntensity, ProgramType } from '../mock/types'
+import { fetchPublishedPrograms } from '../lib/cms/programsRemote'
+import type { Program, ProgramIntensity, ProgramType } from '../mock/types'
 import { Link } from 'react-router-dom'
 import { networkJoinPath } from '../lib/joinRouting'
 
 type TimeFilter = 'all' | 'thisMonth' | 'nextMonth'
 
 export function ProgramsPage() {
+  const [programs, setPrograms] = useState<Program[]>([])
+
   useEffect(() => {
     trackEvent('view_program_list')
+    void fetchPublishedPrograms().then(setPrograms)
   }, [])
 
   const [type, setType] = useState<'all' | ProgramType>('all')
@@ -46,7 +49,7 @@ export function ProgramsPage() {
 
       return time === 'thisMonth' ? isThisMonth : isNextMonth
     })
-  }, [type, audience, intensity, location, theme, time])
+  }, [programs, type, audience, intensity, location, theme, time])
 
   return (
     <>

@@ -3,8 +3,9 @@ import { getSupabaseClient } from '../lib/supabase/client'
 import { isSupabaseConfigured } from '../lib/supabase/env'
 
 /**
- * Storage 中存放首屏视频的 bucket 名称（与 `getPublicUrl` 回退方案一致）。
- * 若已配置 `VITE_HERO_VIDEO_URL_*` 签名直链，则优先使用（见 `.env`）。
+ * Storage 中存放首屏视频的 bucket。
+ * 运行时优先读 `hero_media` 表的 public_url（见 useHeroVideoSrc）；
+ * 此处提供构建期/同步回退：Storage public URL → 可选 env → 本地 /assets。
  */
 const HERO_VIDEO_BUCKET = import.meta.env.VITE_SUPABASE_HERO_VIDEO_BUCKET ?? 'background video'
 
@@ -18,20 +19,22 @@ function normalizeEnvUrl(raw: string | undefined): string | undefined {
   return s.length ? s : undefined
 }
 
-/**
- * 优先使用 `.env` 中的签名 URL；否则在已配置 Supabase 时用 `getPublicUrl`；否则本地 `/assets/`。
- */
+/** 优先 Storage public URL，再回退 env（兼容旧配置），最后本地 assets */
 function heroUrlWithOverride(fileName: string, envOverride: string | undefined): string {
+  if (isSupabaseConfigured()) {
+    try {
+      const { data } = getSupabaseClient().storage.from(HERO_VIDEO_BUCKET).getPublicUrl(fileName)
+      if (data.publicUrl) return data.publicUrl
+    } catch {
+      /* fall through */
+    }
+  }
   const override = normalizeEnvUrl(envOverride)
   if (override) return override
-  if (!isSupabaseConfigured()) {
-    return `/assets/${fileName}`
-  }
-  const { data } = getSupabaseClient().storage.from(HERO_VIDEO_BUCKET).getPublicUrl(fileName)
-  return data.publicUrl
+  return `/assets/${fileName}`
 }
 
-/** 首页首屏 */
+/** 首页首屏（同步回退；页面请用 useHomeHeroVideoSrc） */
 export const HERO_HOME_VIDEO_SRC = heroUrlWithOverride(
   'Video-1777349956294.mp4',
   import.meta.env.VITE_HERO_VIDEO_URL_HOME,

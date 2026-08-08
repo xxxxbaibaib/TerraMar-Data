@@ -48,6 +48,7 @@ export function migrateUser(u: CloudUserRecord): CloudUserRecord {
     bio: u.bio ?? '',
     profilePhone: u.profilePhone ?? '',
     profileEmail: u.profileEmail ?? '',
+    isStaff: Boolean(u.isStaff),
   }
 }
 
@@ -167,6 +168,7 @@ export function registerMockUser(input: {
     bio: '',
     profilePhone: '',
     profileEmail: '',
+    isStaff: false,
   }
   const { level, levelPoints } = computeLevelFromUser(base)
   const user: CloudUserRecord = { ...base, level, levelPoints }
