@@ -81,7 +81,7 @@ export function HomePage() {
               </p>
               <h1 className="text-4xl font-semibold leading-tight md:text-6xl">让保护被看见，让自然可感知，让参与有意义。</h1>
               <p className="mx-auto mt-5 max-w-3xl text-sm text-[#F8F7F2]/90 md:text-base">
-                TerraMar 以保护地为课堂，以生态系统为教材，以社区故事为连接，设计面向儿童、家庭、学校、公众与合作机构的自然教育、公益行动与公民科学项目。
+                清华团队成立，致力于国家公园自然教育体系研究，文化传播，社区能力建设。
               </p>
               <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
                 <Link
